@@ -1,0 +1,36 @@
+name: Cosmic Simulation
+
+on:
+  push:
+  workflow_dispatch:
+
+jobs:
+  run-simulation:
+
+    runs-on: ubuntu-latest
+
+    steps:
+
+    - name: Checkout repo
+      uses: actions/checkout@v4
+
+    - name: Setup Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: "3.11"
+
+    - name: Install dependencies
+      run: |
+        pip install -r requirements.txt
+        sudo apt-get update
+        sudo apt-get install -y ffmpeg
+
+    - name: Run simulation
+      run: |
+        python generate_videos.py
+
+    - name: Upload videos
+      uses: actions/upload-artifact@v4
+      with:
+        name: cosmic-videos
+        path: videos/
